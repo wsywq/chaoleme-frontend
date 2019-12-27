@@ -1,4 +1,5 @@
 # practice
-some python practice or question
 
-python programming
+prepare some practice or question
+
+now in JavaScript/TypeScript
