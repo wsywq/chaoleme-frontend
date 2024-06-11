@@ -1,29 +1,31 @@
 import {createRouter, createWebHistory} from "vue-router";
 
-// import Home from "@/components/views/Home.vue";
-// import About from "@/components/views/About.vue";
-
 let routes = [
     {
         path: "/",
+        redirect: "/food"
+    },
+    {
+        path: "/home",
         name: 'home',
-        component: ()=> import("@/views/Home.vue"),
+        component: () => import("@/views/Home.vue"),
     },
     {
         path: "/about",
         name: 'about',
-        component: ()=> import("@/views/About.vue"),
+        component: () => import("@/views/About.vue"),
     },
     {
-        path: "/list",
-        name: 'list',
-        component: ()=> import("../views/Lists.vue"),
+        path: "/food",
+        name: 'food',
+        component: () => import("@/components/Food.vue"),
     },
 ];
 
 const route = createRouter({
     history: createWebHistory(),
     routes,
+    linkActiveClass:"active"
 });
 
 export default route;

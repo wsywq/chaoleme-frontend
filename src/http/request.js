@@ -1,20 +1,21 @@
 import axios from 'axios';
 
-const service = axios.create({
+const request = axios.create({
     headers: {
         'Content-Type': 'application/json;charset=utf-8'
     },
-    baseURL:window.location.host,
+    // baseURL:window.location.host,
+    baseURL:"http://106.54.32.95:8080",
     timeout:5000
 });
 
-// service.interceptors.request.use(
+// request.interceptors.request.use(
 //     config =>{
 //
 //     }
 // )
 
-service.interceptors.response.use(
+request.interceptors.response.use(
     response=>{
         if (response.status === 200 && response.data.code === 200) {
             return Promise.resolve(response.data.data);
@@ -28,6 +29,6 @@ service.interceptors.response.use(
     }
 );
 
-export default service;
+export default request;
 
 

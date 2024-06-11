@@ -1,10 +1,15 @@
 <script setup>
+import {hello} from "@/http/api.js";
+
 defineProps({
   msg: {
     type: String,
     required: true
   }
 })
+
+const res = await hello();
+console.log(JSON.stringify(res));
 </script>
 
 <template>
