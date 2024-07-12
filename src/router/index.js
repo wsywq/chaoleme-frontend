@@ -2,8 +2,12 @@ import {createRouter, createWebHistory} from "vue-router";
 
 let routes = [
     {
-        path: "/",
-        redirect: "/food"
+        path: "",
+        redirect: "/home"
+    },
+    {
+        path: "",
+        component: () => import("@/views/Home.vue"),
     },
     {
         path: "/home",
@@ -25,7 +29,7 @@ let routes = [
 const route = createRouter({
     history: createWebHistory(),
     routes,
-    linkActiveClass:"active"
+    linkActiveClass: "active"
 });
 
 export default route;

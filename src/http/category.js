@@ -1,9 +1,8 @@
 import request from './request.js';
 
-export function hello() {
+export function getCategoryList() {
     return request({
-        url: '/user/try',
+        url: '/category/list',
         method: 'get'
     })
 }
-
