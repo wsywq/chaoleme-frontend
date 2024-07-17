@@ -17,8 +17,8 @@ const request = axios.create({
 
 request.interceptors.response.use(
     response=>{
-        if (response.status === 200 && response.data.code === 200) {
-            return Promise.resolve(response.data.data);
+        if (response.status === 200) {
+            return Promise.resolve(response.data);
         } else {
             return Promise.reject(response.data);
         }

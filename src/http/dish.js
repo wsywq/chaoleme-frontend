@@ -7,6 +7,15 @@ export function getDishList() {
     })
 }
 
+export function getDishPage(params) {
+    return request({
+        url: '/dish/page',
+        method: 'get',
+        params
+    })
+}
+
+
 export function getDishById(param) {
     return request({
         url: '/dish',

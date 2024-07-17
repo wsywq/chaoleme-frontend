@@ -1,54 +1,3 @@
-<script setup>
-import {getDishList} from "@/http/dish.js";
-
-export default {
-  name: "DishList",
-  data() {
-    return {
-      imgUrl: 'http://xxxx',
-      loading: false,
-      finished: false,
-      list: [],
-      pageNum: 1,
-      error: false,
-      text: '',
-      total: '',
-      showResult: false,
-      dishName: ''
-    }
-  },
-  computed() {
-
-  },
-  created() {
-    this.dishName = '';
-    this.getList();
-  },
-  methods: {
-    getList() {
-      let _this = this;
-      const toast = Toast.loading({
-        duration: 0,
-        forbidClick: true,
-        message: '正在加载中...',
-      });
-      getDishList().then(res => {
-        console.log(JSON.stringify(res));
-        this.list = res.data;
-      }, err => {
-        console.error(JSON.stringify(err));
-      }).catch(error => {
-        console.error(JSON.stringify(error));
-      })
-    },
-    onLoad() {
-      this.pageNum++;
-      this.getList();
-    }
-  }
-}
-</script>
-
 <template>
   <div class="container">
     <div class="">
@@ -74,8 +23,83 @@ export default {
         <div class="van-list__finished-text">没有更多了</div>
       </div>
     </div>
+    <van-overlay :show="showDishDetail">
+      <van-cell>菜品详情</van-cell>
+      <!--      <van-card desc="dishItem.name"></van-card>-->
+      <van-cell>{{ dishItem.name }}</van-cell>
+      <van-cell>{{ dishItem.description }}</van-cell>
+    </van-overlay>
   </div>
 </template>
+
+<script>
+import {getDishList, getDishPage} from "@/http/dish.js";
+import {closeToast, showLoadingToast} from "vant";
+
+
+export default {
+  name: "DishList",
+  data() {
+    return {
+      imgUrl: 'http://xxxx',
+      loading: false,
+      finished: false,
+      list: [],
+      pageNum: 1,
+      error: false,
+      text: '',
+      total: '',
+      showResult: false,
+      dishName: '',
+      showDishDetail: false,
+      dishItem: {
+        name: "",
+        description: ""
+      }
+    }
+  },
+  computed: {},
+  created() {
+    this.dishName = '';
+    this.getList();
+  },
+  methods: {
+    getList() {
+      let _this = this;
+      const toast = showLoadingToast({
+        duration: 0,
+        forbidClick: true,
+        message: '正在加载中...',
+      });
+      let queryParams = {
+        pageNum: this.pageNum,
+        pageSize: 10
+      }
+      getDishPage(queryParams).then(res => {
+        this.list = [...this.list, ...res.data.records];
+        this.loading = false;
+        this.total = res.data.total;
+        this.finished = this.list.length >= res.data.total;
+      }, err => {
+        console.error(JSON.stringify(err));
+        this.error = true;
+      }).catch(error => {
+        console.error(JSON.stringify(error));
+        this.error = true;
+      }).finally(closeToast())
+    },
+    onLoad() {
+      this.pageNum++;
+      this.getList();
+    },
+    goDetail(item) {
+      this.showDishDetail = true;
+      this.dishItem.name = item.name;
+      this.dishItem.description = item.description;
+    }
+  }
+}
+</script>
 
 <style lang="less" scoped>
 .container {

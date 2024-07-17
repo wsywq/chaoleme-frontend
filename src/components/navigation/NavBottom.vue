@@ -28,9 +28,11 @@ let footerList = ref([])
         </router-link>
       </el-col>
       <el-col :span="6">
+        <router-link to="/about">
         <el-icon>
           <Tools/>
         </el-icon>
+        </router-link>
       </el-col>
       <el-col :span="6">
         <el-icon>
