@@ -6,8 +6,8 @@
                 finished-text="没有更多了..." :immediate-check="false" offset="100" @load="onLoad">
         <div class="dish_list" @click="goDetail(item)" v-for="item in list" :key="item.id">
           <div class="top">
-            <img :src="imgUrl + item.path + '.png'">
-            <span class="proName">{{ item.name }}</span>
+            <span class="dish_name">{{ item.name }}</span>
+            <img :src="item.imageUrl">
             <van-tag class="tags" color="#fdeee9" text-color="#d17557">{{ item.categoryName }}</van-tag>
           </div>
         </div>
@@ -15,15 +15,20 @@
       <div v-if="total < 10">
         <div class="dish_list" @click="goDetail(item)" v-for="item in list" :key="item.id">
           <div class="top">
-            <img :src="imgUrl + item.path + '.png'">
-            <span class="proName">{{ item.name }}</span>
+            <span class="dish_name">{{ item.name }}</span>
             <van-tag class="tags" color="#fdeee9" text-color="#d17557">{{ item.categoryName }}</van-tag>
+            <div class="dish_image">
+              <img :src="item.imageUrl">
+            </div>
           </div>
         </div>
         <div class="van-list__finished-text">没有更多了</div>
       </div>
     </div>
-    <van-overlay :show="showDishDetail">
+    <van-overlay :show="showDishDetail" @click="show = false">
+      <div>
+
+      </div>
       <van-cell>菜品详情</van-cell>
       <!--      <van-card desc="dishItem.name"></van-card>-->
       <van-cell>{{ dishItem.name }}</van-cell>
@@ -41,7 +46,7 @@ export default {
   name: "DishList",
   data() {
     return {
-      imgUrl: 'http://xxxx',
+      imgUrl: 'xxx',
       loading: false,
       finished: false,
       list: [],
@@ -86,7 +91,7 @@ export default {
       }).catch(error => {
         console.error(JSON.stringify(error));
         this.error = true;
-      }).finally(closeToast())
+      }).finally(closeToast());
     },
     onLoad() {
       this.pageNum++;
@@ -120,12 +125,17 @@ export default {
     align-items: center;
 
     img {
-      width: 90px;
-      height: 24px;
+      width: 100%;
+      height: 360px;
       vertical-align: middle;
     }
 
-    .proName {
+    .dish_image {
+      display:  block;
+      margin: 0 auto;
+    }
+
+    .dish_name {
       display: inline-block;
       max-width: 80px;
       overflow: hidden;

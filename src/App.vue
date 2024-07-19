@@ -2,13 +2,13 @@
 </script>
 
 <template>
-<!--    <div>-->
-<!--      <router-link to="/">Index</router-link>-->
-<!--      <router-link to="/index">Index</router-link>-->
-<!--      <router-link to="/">Home</router-link>-->
-<!--      <router-link to="/about">About</router-link>-->
-<!--      <router-link to="/list">list</router-link>-->
-<!--    </div>-->
+    <div>
+      <router-link to="/">Index</router-link>
+      <router-link to="/index">Index</router-link>
+      <router-link to="/">Home</router-link>
+      <router-link to="/about">About</router-link>
+      <router-link to="/list">list</router-link>
+    </div>
     <router-view></router-view>
 </template>
 
