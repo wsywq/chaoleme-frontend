@@ -15,8 +15,8 @@ let routes = [
         component: () => import("@/views/Home.vue"),
     },
     {
-        path: "/about",
-        name: 'about',
+        path: "/dish",
+        name: 'dish',
         component: () => import("@/views/DishList.vue"),
     },
     {
