@@ -1,79 +1,50 @@
 <template>
-  <!--  <div class="container">-->
-  <!--    <div class="">-->
-  <!--      <van-list v-if="total > 10" v-model="loading" :finished="finished" :error.sync="error"-->
-  <!--                error-text="请求失败，点击重新加载"-->
-  <!--                finished-text="没有更多了..." :immediate-check="false" offset="100" @load="onLoad">-->
-  <!--        <div class="dish_list" @click="goDetail(item)" v-for="item in list" :key="item.id">-->
-  <!--          <div class="top">-->
-  <!--            <span class="dish_name">{{ item.name }}</span>-->
-  <!--            <img :src="item.imageUrl">-->
-  <!--            <van-tag class="tags" color="#fdeee9" text-color="#d17557">{{ item.categoryName }}</van-tag>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--      </van-list>-->
-  <!--      <div v-if="total < 10">-->
-  <!--        <div class="dish_list" @click="goDetail(item)" v-for="item in list" :key="item.id">-->
-  <!--          <div class="top">-->
-  <!--            <span class="dish_name">{{ item.name }}</span>-->
-  <!--            <van-tag class="tags" color="#fdeee9" text-color="#d17557">{{ item.categoryName }}</van-tag>-->
-  <!--            <div class="dish_image">-->
-  <!--              <img :src="item.imageUrl">-->
-  <!--            </div>-->
-  <!--          </div>-->
-  <!--          <div>-->
-  <!--            <el-card style="max-width: 480px">-->
-  <!--              <template #header>{{ item.name }}</template>-->
-  <!--              <img-->
-  <!--                  :src="item.imageUrl"-->
-  <!--                  style="width: 100%"-->
-  <!--              />-->
-  <!--            </el-card>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--        <div class="van-list__finished-text">没有更多了</div>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--    <van-popup v-model:show="showDishDetail" round :style="{ padding: '64px' }" >-->
-  <!--      <van-cell>菜品详情</van-cell>-->
-  <!--      <van-cell>{{ dishItem.name }}</van-cell>-->
-  <!--      <van-cell>{{ dishItem.description }}</van-cell>-->
-  <!--    </van-popup>-->
-  <!--  </div>-->
-  <!--  <el-backtop :right="10" :bottom="100" />-->
   <div class="common-layout">
     <el-container>
       <el-header>Header</el-header>
       <el-container>
-        <!--        <el-aside width="100px">-->
-        <!--          <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">-->
-        <!--            <el-radio-button :value="false">expand</el-radio-button>-->
-        <!--            <el-radio-button :value="true">collapse</el-radio-button>-->
-        <!--          </el-radio-group>-->
-        <!--        </el-aside>-->
+        <el-aside width="100px">
+          <span>点餐</span>
+          <el-menu unique-opened>
+            <el-menu-item index="1-1" @click="handleMenuItemClick('1-1')">
+              <el-icon color="#409efc" class="no-inherit">
+                <Dish/>
+              </el-icon>
+            </el-menu-item>
+            <el-menu-item index="2-1" @click="handleMenuItemClick('2-1')">
+              <el-icon color="#409efc" class="no-inherit">
+                <Share />
+              </el-icon>
+            </el-menu-item>
+            <el-menu-item index="3-1" @click="handleMenuItemClick('3-1')">
+              <i class="el-icon-setting"></i>
+              导航三
+            </el-menu-item>
+          </el-menu>
+        </el-aside>
         <el-main>
           <div v-if="total < 10">
             <div class="dish_list" @click="goDetail(item)" v-for="item in list" :key="item.id">
               <el-card style="max-width: 480px" shadow="always">
-                <template #header>{{ item.name }}</template>
-                <el-row :gutter="5">
+                <template #header>
+                  <div class="dish-header">
+                    <span>{{ item.name }}</span>
+                    <el-tag type="danger" size="small">{{ item.categoryName }}</el-tag>
+                  </div>
+                </template>
+                <el-row :gutter="10" space-between>
                   <el-col :span="8">
                     <div class="grid-content ep-bg-purple">
                       <img
                           :src="item.imageUrl"
-                          style="auto; height:auto"
+                          style="width: auto; height:auto; border-radius: 10px;"
                           alt="haochi"/>
                     </div>
                   </el-col>
-                  <el-col :span="8">
-                    <div class="grid-content ep-bg-purple-light">
-                      <el-tag type="primary">{{ item.categoryName }}</el-tag>
-                    </div>
-                  </el-col>
-                  <el-col :span="8">
-                    <div class="grid-content ep-bg-purple-light">
+                  <el-col :span="10" :offset="6">
+                    <el-space direction="vertical">
                       <el-text>{{ item.description }}</el-text>
-                    </div>
+                    </el-space>
                   </el-col>
                 </el-row>
               </el-card>
@@ -94,13 +65,13 @@ import {
   Document,
   Menu as IconMenu,
   Location,
-  Setting,
+  Setting, Dish, Share,
 } from '@element-plus/icons-vue'
 
 
 export default {
   name: "DishList",
-  components: {Location, NavBottom},
+  components: {Share, Dish, Location, NavBottom},
   data() {
     return {
       imgUrl: 'xxx',
@@ -159,12 +130,19 @@ export default {
       this.showDishDetail = true;
       this.dishItem.name = item.name;
       this.dishItem.description = item.description;
+    },
+    handleMenuItemClick(index) {
+      console.log('Menu item clicked:', index);
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.common-layout {
+  //background-color: #c6e2ff;
+}
+
 .container {
   padding: 0 12px;
 }
@@ -273,5 +251,15 @@ export default {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
+}
+
+.dish-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    font-weight: bold;
+  }
 }
 </style>
