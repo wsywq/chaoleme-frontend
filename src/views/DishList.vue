@@ -1,26 +1,16 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>Header</el-header>
+      <el-header class="nav-header">
+        <template #default>
+          <NavHeader/>
+        </template>
+      </el-header>
       <el-container>
-        <el-aside width="100px">
-          <span>点餐</span>
-          <el-menu unique-opened>
-            <el-menu-item index="1-1" @click="handleMenuItemClick('1-1')">
-              <el-icon color="#409efc" class="no-inherit">
-                <Dish/>
-              </el-icon>
-            </el-menu-item>
-            <el-menu-item index="2-1" @click="handleMenuItemClick('2-1')">
-              <el-icon color="#409efc" class="no-inherit">
-                <Share />
-              </el-icon>
-            </el-menu-item>
-            <el-menu-item index="3-1" @click="handleMenuItemClick('3-1')">
-              <i class="el-icon-setting"></i>
-              导航三
-            </el-menu-item>
-          </el-menu>
+        <el-aside width="85px" class="nav-aside">
+          <template #default>
+            <AsideMenu/>
+          </template>
         </el-aside>
         <el-main>
           <div v-if="total < 10">
@@ -67,11 +57,13 @@ import {
   Location,
   Setting, Dish, Share,
 } from '@element-plus/icons-vue'
+import AsideMenu from "@/components/navigation/AsideMenu.vue";
+import NavHeader from "@/components/navigation/NavHeader.vue";
 
 
 export default {
   name: "DishList",
-  components: {Share, Dish, Location, NavBottom},
+  components: {NavHeader, AsideMenu, Share, Dish, Location, NavBottom},
   data() {
     return {
       imgUrl: 'xxx',
@@ -130,9 +122,6 @@ export default {
       this.showDishDetail = true;
       this.dishItem.name = item.name;
       this.dishItem.description = item.description;
-    },
-    handleMenuItemClick(index) {
-      console.log('Menu item clicked:', index);
     }
   }
 }
@@ -261,5 +250,18 @@ export default {
   span {
     font-weight: bold;
   }
+}
+
+.el-main {
+  padding:10px 0 10px 10px;
+}
+
+.nav-header {
+  background-color: #c6e2ff;
+  padding: 0 0 0 10px;
+}
+
+.nav-aside {
+ background-color: gainsboro;
 }
 </style>
