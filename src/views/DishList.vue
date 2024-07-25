@@ -253,15 +253,23 @@ export default {
 }
 
 .el-main {
-  padding:10px 0 10px 10px;
+  margin:150px 0 0 85px;
+  padding: 10px 0 10px 10px;
 }
 
 .nav-header {
-  background-color: #c6e2ff;
+  background-color: #f64f4f;
   padding: 0 0 0 10px;
+  height: 150px;
+  position: fixed;
+  z-index: 99999;
 }
 
 .nav-aside {
- background-color: gainsboro;
+  margin-top:150px;
+  left: 0;
+  height: 100%;
+  background-color: gainsboro;
+  position: fixed;
 }
 </style>
