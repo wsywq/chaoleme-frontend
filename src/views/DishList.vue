@@ -7,12 +7,15 @@
         </template>
       </el-header>
       <el-container>
-        <el-aside width="85px" class="nav-aside">
+        <el-aside width="95px" class="nav-aside">
           <template #default>
             <AsideMenu/>
           </template>
         </el-aside>
         <el-main>
+<!--          <template #default>-->
+<!--            -->
+<!--          </template>-->
           <div v-if="total < 10">
             <div class="dish_list" @click="goDetail(item)" v-for="item in list" :key="item.id">
               <el-card style="max-width: 480px" shadow="always">

@@ -2,21 +2,44 @@
   <div class="sidebar">
     <!--    <span>开饭！！！</span>-->
     <el-menu background-color="gainsboro" unique-opened>
-      <el-menu-item style="padding-left: 15px" index="1-1" @click="handleMenuItemClick('1-1')">
-        <el-icon color="#409efc">
-          <Dish/>
-        </el-icon>
-        菜品
+      <el-menu-item style="padding-left: 10px" index="1" @click="handleMenuItemClick('1')">
+        好评亲一个
       </el-menu-item>
-      <el-menu-item  style="padding-left: 15px" index="2-1" @click="handleMenuItemClick('2-1')">
+      <el-menu-item  style="padding-left: 10px" index="2" @click="handleMenuItemClick('2')">
         <el-icon color="#409efc">
           <Food/>
         </el-icon>
-        套餐
+        健康时蔬
       </el-menu-item>
-      <el-menu-item style="padding-left: 15px" index="3-1" @click="handleMenuItemClick('3-1')">
+      <el-menu-item style="padding-left: 10px" index="3" @click="handleMenuItemClick('3')">
+        <el-icon color="#409efc">
+          <Dish/>
+        </el-icon>
+        大口吃肉
+      </el-menu-item>
+      <el-menu-item style="padding-left: 10px" index="4" @click="handleMenuItemClick('3')">
         <i class="el-icon-setting"></i>
-        最爱
+        滋补养生汤
+      </el-menu-item>
+      <el-menu-item style="padding-left: 10px" index="5" @click="handleMenuItemClick('3')">
+        <i class="el-icon-setting"></i>
+        暖胃营养粥
+      </el-menu-item>
+      <el-menu-item style="padding-left: 10px" index="6" @click="handleMenuItemClick('3')">
+        <i class="el-icon-setting"></i>
+        炸物
+      </el-menu-item>
+      <el-menu-item style="padding-left: 10px" index="7" @click="handleMenuItemClick('3')">
+        <i class="el-icon-setting"></i>
+        特色主食
+      </el-menu-item>
+      <el-menu-item style="padding-left: 10px" index="8" @click="handleMenuItemClick('3')">
+        <i class="el-icon-setting"></i>
+        饮品
+      </el-menu-item>
+      <el-menu-item style="padding-left: 10px" index="9" @click="handleMenuItemClick('3')">
+        <i class="el-icon-setting"></i>
+        套餐
       </el-menu-item>
     </el-menu>
   </div>
@@ -38,7 +61,6 @@ const handleMenuItemClick = (index) => {
   top: 0;
   overflow-y: auto; /* 如果内容过多，允许垂直滚动 */
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* 轻微的阴影效果 */
-  margin-top: 16px;
   border-radius: 6px;
 }
 
