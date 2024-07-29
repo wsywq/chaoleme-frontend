@@ -13,36 +13,9 @@
           </template>
         </el-aside>
         <el-main>
-<!--          <template #default>-->
-<!--            -->
-<!--          </template>-->
-          <div v-if="total < 10">
-            <div class="dish_list" @click="goDetail(item)" v-for="item in list" :key="item.id">
-              <el-card style="max-width: 480px" shadow="always">
-                <template #header>
-                  <div class="dish-header">
-                    <span>{{ item.name }}</span>
-                    <el-tag type="danger" size="small">{{ item.categoryName }}</el-tag>
-                  </div>
-                </template>
-                <el-row :gutter="10" space-between>
-                  <el-col :span="8">
-                    <div class="grid-content ep-bg-purple">
-                      <img
-                          :src="item.imageUrl"
-                          style="width: auto; height:auto; border-radius: 10px;"
-                          alt="haochi"/>
-                    </div>
-                  </el-col>
-                  <el-col :span="10" :offset="6">
-                    <el-space direction="vertical">
-                      <el-text>{{ item.description }}</el-text>
-                    </el-space>
-                  </el-col>
-                </el-row>
-              </el-card>
-            </div>
-          </div>
+          <template #default>
+            <DishCard/>
+          </template>
         </el-main>
       </el-container>
     </el-container>
@@ -62,11 +35,12 @@ import {
 } from '@element-plus/icons-vue'
 import AsideMenu from "@/components/navigation/AsideMenu.vue";
 import NavHeader from "@/components/navigation/NavHeader.vue";
+import DishCard from "@/components/main/DishCard.vue";
 
 
 export default {
   name: "DishList",
-  components: {NavHeader, AsideMenu, Share, Dish, Location, NavBottom},
+  components: {DishCard, NavHeader, AsideMenu, Share, Dish, Location, NavBottom},
   data() {
     return {
       imgUrl: 'xxx',
@@ -139,125 +113,14 @@ export default {
   padding: 0 12px;
 }
 
-.dish_list {
-  padding: 6px 6px;
-  background-color: #fff;
-  border-radius: 4px;
-  margin-bottom: 10px;
-
-  .top {
-    width: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    img {
-      width: 100%;
-      height: 360px;
-      vertical-align: middle;
-    }
-
-    .dish_image {
-      display: block;
-      margin: 0 auto;
-    }
-
-    .dish_name {
-      display: inline-block;
-      max-width: 80px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      // transform: translateY(3px);
-    }
-
-    span {
-      font-size: 14px;
-      font-weight: 500;
-      color: #232323;
-    }
-
-    .tags {
-      margin-left: auto;
-    }
-
-    .citys {
-      max-width: 90px;
-      margin-left: auto;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
-
-  .mid {
-    margin-top: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .left {
-      font-size: 18px;
-      font-weight: 500;
-      color: #fc5034;
-      width: 50%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .right {
-      font-size: 11px;
-      font-weight: 400;
-      color: #373636;
-
-      span {
-        font-size: 18px;
-        color: #373636;
-        font-weight: 500;
-      }
-    }
-  }
-
-  .bottom {
-    margin-top: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .left {
-      text-align: left;
-    }
-
-    p {
-      width: 75px;
-      text-align: right;
-      font-size: 12px;
-      font-weight: 400;
-      color: #959595;
-    }
-  }
-}
-
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
 }
 
-.dish-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  span {
-    font-weight: bold;
-  }
-}
-
 .el-main {
   margin:150px 0 0 85px;
-  padding: 10px 0 10px 10px;
+  padding: 5px 0 10px 10px;
 }
 
 .nav-header {
@@ -272,7 +135,7 @@ export default {
   margin-top:150px;
   left: 0;
   height: 100%;
-  background-color: gainsboro;
+  background-color: #ececec;
   position: fixed;
 }
 </style>

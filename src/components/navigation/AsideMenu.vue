@@ -1,43 +1,43 @@
 <template>
   <div class="sidebar">
     <!--    <span>开饭！！！</span>-->
-    <el-menu background-color="gainsboro" unique-opened>
-      <el-menu-item style="padding-left: 10px" index="1" @click="handleMenuItemClick('1')">
+    <el-menu background-color="#ececec" unique-opened>
+      <el-menu-item style="padding-left: 8px;" index="1" @click="handleMenuItemClick('1')">
         好评亲一个
       </el-menu-item>
-      <el-menu-item  style="padding-left: 10px" index="2" @click="handleMenuItemClick('2')">
+      <el-menu-item style="padding-left: 5px;" index="2" @click="handleMenuItemClick('2')">
         <el-icon color="#409efc">
           <Food/>
         </el-icon>
         健康时蔬
       </el-menu-item>
-      <el-menu-item style="padding-left: 10px" index="3" @click="handleMenuItemClick('3')">
+      <el-menu-item style="padding-left: 5px;" index="3" @click="handleMenuItemClick('3')">
         <el-icon color="#409efc">
           <Dish/>
         </el-icon>
         大口吃肉
       </el-menu-item>
-      <el-menu-item style="padding-left: 10px" index="4" @click="handleMenuItemClick('3')">
+      <el-menu-item style="padding-left: 5px;" index="4" @click="handleMenuItemClick('3')">
         <i class="el-icon-setting"></i>
         滋补养生汤
       </el-menu-item>
-      <el-menu-item style="padding-left: 10px" index="5" @click="handleMenuItemClick('3')">
+      <el-menu-item style="padding-left: 5px;" index="5" @click="handleMenuItemClick('3')">
         <i class="el-icon-setting"></i>
         暖胃营养粥
       </el-menu-item>
-      <el-menu-item style="padding-left: 10px" index="6" @click="handleMenuItemClick('3')">
+      <el-menu-item style="padding-left: 5px;" index="6" @click="handleMenuItemClick('3')">
         <i class="el-icon-setting"></i>
         炸物
       </el-menu-item>
-      <el-menu-item style="padding-left: 10px" index="7" @click="handleMenuItemClick('3')">
+      <el-menu-item style="padding-left: 5px;" index="7" @click="handleMenuItemClick('3')">
         <i class="el-icon-setting"></i>
         特色主食
       </el-menu-item>
-      <el-menu-item style="padding-left: 10px" index="8" @click="handleMenuItemClick('3')">
+      <el-menu-item style="padding-left: 5px;" index="8" @click="handleMenuItemClick('3')">
         <i class="el-icon-setting"></i>
         饮品
       </el-menu-item>
-      <el-menu-item style="padding-left: 10px" index="9" @click="handleMenuItemClick('3')">
+      <el-menu-item style="padding-left: 5px;" index="9" @click="handleMenuItemClick('3')">
         <i class="el-icon-setting"></i>
         套餐
       </el-menu-item>
@@ -64,13 +64,14 @@ const handleMenuItemClick = (index) => {
   border-radius: 6px;
 }
 
-.el-menu_list {
-  padding-left: 0px;
+.el-menu-item {
+  border-bottom: 1px solid black;
+  border-radius: 3px;
 }
 
-.el-menu_item {
-  padding-left: 0;
+.el-menu-item:not(.is-disabled):hover{
+  background-color: #f5f5f5; /* 悬停时的背景颜色 */
+  color: #409eff; /* 悬停时的文字颜色，Element Plus 主题色 */
 }
-
 
 </style>
