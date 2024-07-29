@@ -119,7 +119,7 @@ export default {
 }
 
 .el-main {
-  margin:150px 0 0 85px;
+  margin:150px 0 60px 85px;
   padding: 5px 0 10px 10px;
 }
 

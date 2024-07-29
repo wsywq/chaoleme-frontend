@@ -5,7 +5,7 @@
       <span>乐乐小公主</span>
     </div>
     <div class="nav-title">
-      <span>专属餐厅上线咯</span>
+      <span>专属爱心餐厅上线咯</span>
       <div>
         <img class="nav-title_img" src="/sun.svg" alt="sun">
         <img class="nav-title_img" src="/sun.svg" alt="sun">
