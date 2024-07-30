@@ -12,51 +12,54 @@
           <el-col :span="5">
             <div class="grid-content ep-bg-purple">
               <img
-                  :src="item.imageUrl"
-                  style="width: 130px; height:130px; border-radius: 10px;"
-                  alt="haochi"/>
+                :src="item.imageUrl"
+                style="width: 130px; height: 130px; border-radius: 10px"
+                alt="haochi"
+              />
             </div>
           </el-col>
-          <el-col :span="12" :offset="7" style="padding-left:0px">
+          <el-col :span="12" :offset="7" style="padding-left: 0px">
             <div class="content-wrapper">
               <!--              <div class="content-row">{{ item.description }}</div>-->
               <div class="content-row card-title">{{ item.name }}</div>
               <div class="content-row">
-                <el-tag type="danger" size="small">{{ item.categoryName }}</el-tag>
+                <el-tag type="danger" size="small">{{
+                  item.categoryName
+                }}</el-tag>
               </div>
               <div class="content-row">
                 辣度:
                 <img
-                    v-for="n in item.heatLevel"
-                    :key="n"
-                    src="/public/hot.svg"
-                    alt="hot"
-                    class="icon"
-                    style="margin:5px 0 0 3px;width: 16px;height:16px"
+                  v-for="n in item.heatLevel"
+                  :key="n"
+                  src="/public/hot.svg"
+                  alt="hot"
+                  class="icon"
+                  style="margin: 5px 0 0 3px; width: 16px; height: 16px"
                 />
               </div>
               <div class="content-row">
-                <span style="color:#dedfe0">已点: {{ item.count }}</span>
+                <span style="color: #dedfe0">已点: {{ item.count }}</span>
                 <div class="cart-container">
                   <div class="cart-control">
                     <el-button
-                        class="cart-button"
-                        style="border: 2px solid red"
-                        @click="handleSubtractClick(item)"
-                        :disabled="item.currentCount === 0"
+                      class="cart-button"
+                      style="border: 2px solid red"
+                      @click="handleSubtractClick(item)"
+                      :disabled="item.currentCount === 0"
                     >
                       <el-icon :size="10" color="red">
-                        <Minus/>
+                        <Minus />
                       </el-icon>
                     </el-button>
                     <span class="count">{{ item.currentCount }}</span>
                     <el-button
-                        class="cart-button"
-                        type="danger"
-                        @click="handleAddClick(item)"
+                      class="cart-button"
+                      type="danger"
+                      @click="handleAddClick(item)"
                     >
                       <el-icon :size="10">
-                        <Plus/>
+                        <Plus />
                       </el-icon>
                     </el-button>
                   </div>
@@ -68,17 +71,20 @@
       </el-card>
     </div>
   </div>
+  <div class="cart">
+    <el-icon size="25" color="red"><ShoppingCartFull /></el-icon>
+    <span class="cart-count">{{ cartCount }}</span>
+  </div>
 </template>
 
 <script>
-
-import {closeToast, showLoadingToast} from "vant";
-import {getDishPage} from "@/http/dish.js";
-import {Minus, Plus} from "@element-plus/icons-vue";
+import { closeToast, showLoadingToast } from "vant";
+import { getDishPage } from "@/http/dish.js";
+import { Minus, Plus } from "@element-plus/icons-vue";
 
 export default {
   name: "DishCard",
-  components: {Minus, Plus},
+  components: { Minus, Plus },
   data() {
     return {
       list: [],
@@ -88,11 +94,15 @@ export default {
       showResult: false,
       dishItem: {
         name: "",
-        description: ""
-      }
-    }
+        description: "",
+      },
+    };
   },
-  computed: {},
+  computed: {
+    cartCount() {
+      return this.list.reduce((total, item) => total + item.currentCount, 0);
+    },
+  },
   created() {
     this.getList();
   },
@@ -102,24 +112,30 @@ export default {
       const toast = showLoadingToast({
         duration: 0,
         forbidClick: true,
-        message: '正在加载中...',
+        message: "正在加载中...",
       });
       let queryParams = {
         pageNum: this.pageNum,
-        pageSize: 10
-      }
-      getDishPage(queryParams).then(res => {
-        this.list = [...this.list, ...res.data.records];
-        this.loading = false;
-        this.total = res.data.total;
-        this.finished = this.list.length >= res.data.total;
-      }, err => {
-        console.error(JSON.stringify(err));
-        this.error = true;
-      }).catch(error => {
-        console.error(JSON.stringify(error));
-        this.error = true;
-      }).finally(closeToast());
+        pageSize: 10,
+      };
+      getDishPage(queryParams)
+        .then(
+          (res) => {
+            this.list = [...this.list, ...res.data.records];
+            this.loading = false;
+            this.total = res.data.total;
+            this.finished = this.list.length >= res.data.total;
+          },
+          (err) => {
+            console.error(JSON.stringify(err));
+            this.error = true;
+          }
+        )
+        .catch((error) => {
+          console.error(JSON.stringify(error));
+          this.error = true;
+        })
+        .finally(closeToast());
     },
     onLoad() {
       this.pageNum++;
@@ -135,10 +151,8 @@ export default {
       }
       // console.log(JSON.stringify(item));
     },
-  }
-}
-
-
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -201,8 +215,11 @@ export default {
     border: none;
   }
 
-  /* 禁用按钮的样式 */
+  .cart-button:hover {
+    background-color: orangered;
+  }
 
+  /* 禁用按钮的样式 */
   .cart-button[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
@@ -214,4 +231,32 @@ export default {
   }
 }
 
+.cart {
+  position: fixed;
+  bottom: 40px; /* 距离底部的距离 */
+  right: 20px; /* 距离右侧的距离 */
+  z-index: 10; /* 确保图标在页面内容的上方 */
+  background-color: #ffffff; /* 背景色 */
+  border-radius: 50%; /* 圆形背景 */
+  padding: 15px 13px 10px 10px; /* 内边距 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+  cursor: pointer;
+
+  .cart-count {
+    position: absolute;
+    top: -10px; /* 根据实际大小调整 */
+    right: 25%; /* 与购物车图标的中心对齐 */
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 5px;
+    border-radius: 10px;
+    transform: translateX(50%);
+  }
+}
+
+.cart:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease-in-out;
+}
 </style>
