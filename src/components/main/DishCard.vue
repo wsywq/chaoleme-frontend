@@ -12,9 +12,9 @@
           <el-col :span="5">
             <div class="grid-content ep-bg-purple">
               <img
-                :src="item.imageUrl"
-                style="width: 130px; height: 130px; border-radius: 10px"
-                alt="haochi"
+                  :src="item.imageUrl"
+                  style="width: 130px; height: 130px; border-radius: 10px"
+                  alt="haochi"
               />
             </div>
           </el-col>
@@ -24,18 +24,19 @@
               <div class="content-row card-title">{{ item.name }}</div>
               <div class="content-row">
                 <el-tag type="danger" size="small">{{
-                  item.categoryName
-                }}</el-tag>
+                    item.categoryName
+                  }}
+                </el-tag>
               </div>
               <div class="content-row">
                 辣度:
                 <img
-                  v-for="n in item.heatLevel"
-                  :key="n"
-                  src="/public/hot.svg"
-                  alt="hot"
-                  class="icon"
-                  style="margin: 5px 0 0 3px; width: 16px; height: 16px"
+                    v-for="n in item.heatLevel"
+                    :key="n"
+                    src="/public/hot.svg"
+                    alt="hot"
+                    class="icon"
+                    style="margin: 5px 0 0 3px; width: 16px; height: 16px"
                 />
               </div>
               <div class="content-row">
@@ -43,23 +44,23 @@
                 <div class="cart-container">
                   <div class="cart-control">
                     <el-button
-                      class="cart-button"
-                      style="border: 2px solid red"
-                      @click="handleSubtractClick(item)"
-                      :disabled="item.currentCount === 0"
+                        class="cart-button"
+                        style="border: 2px solid red"
+                        @click="handleSubtractClick(item)"
+                        :disabled="item.currentCount === 0"
                     >
                       <el-icon :size="10" color="red">
-                        <Minus />
+                        <Minus/>
                       </el-icon>
                     </el-button>
                     <span class="count">{{ item.currentCount }}</span>
                     <el-button
-                      class="cart-button"
-                      type="danger"
-                      @click="handleAddClick(item)"
+                        class="cart-button"
+                        type="danger"
+                        @click="handleAddClick(item)"
                     >
                       <el-icon :size="10">
-                        <Plus />
+                        <Plus/>
                       </el-icon>
                     </el-button>
                   </div>
@@ -72,19 +73,38 @@
     </div>
   </div>
   <div class="cart">
-    <el-icon size="25" color="red"><ShoppingCartFull /></el-icon>
+    <el-button class="cart-icon" @click="showShoppingCart">
+      <el-icon size="15">
+        <ShoppingCartFull/>
+      </el-icon>
+    </el-button>
     <span class="cart-count">{{ cartCount }}</span>
   </div>
+  <!-- 购物车列表 -->
+  <el-drawer
+      :with-header="false"
+      direction="btt"
+      size="30%"
+      v-model="isCartListVisible"
+  >
+    <div class="cart-list">
+      <div class="cart-item" v-for="(item, index) in list" :key="index">
+        <img style="width: 15px;height: 15px" :src="item.imageUrl" alt="item"/>
+        <div>{{ item.name }}</div>
+        <div>数量: {{ item.currentCount }}</div>
+      </div>
+    </div>
+  </el-drawer>
 </template>
 
 <script>
-import { closeToast, showLoadingToast } from "vant";
-import { getDishPage } from "@/http/dish.js";
-import { Minus, Plus } from "@element-plus/icons-vue";
+import {closeToast, showLoadingToast} from "vant";
+import {getDishPage} from "@/http/dish.js";
+import {Minus, Plus, ShoppingCartFull} from "@element-plus/icons-vue";
 
 export default {
   name: "DishCard",
-  components: { Minus, Plus },
+  components: {ShoppingCartFull, Minus, Plus},
   data() {
     return {
       list: [],
@@ -96,6 +116,7 @@ export default {
         name: "",
         description: "",
       },
+      isCartListVisible: false
     };
   },
   computed: {
@@ -119,23 +140,23 @@ export default {
         pageSize: 10,
       };
       getDishPage(queryParams)
-        .then(
-          (res) => {
-            this.list = [...this.list, ...res.data.records];
-            this.loading = false;
-            this.total = res.data.total;
-            this.finished = this.list.length >= res.data.total;
-          },
-          (err) => {
-            console.error(JSON.stringify(err));
+          .then(
+              (res) => {
+                this.list = [...this.list, ...res.data.records];
+                this.loading = false;
+                this.total = res.data.total;
+                this.finished = this.list.length >= res.data.total;
+              },
+              (err) => {
+                console.error(JSON.stringify(err));
+                this.error = true;
+              }
+          )
+          .catch((error) => {
+            console.error(JSON.stringify(error));
             this.error = true;
-          }
-        )
-        .catch((error) => {
-          console.error(JSON.stringify(error));
-          this.error = true;
-        })
-        .finally(closeToast());
+          })
+          .finally(closeToast());
     },
     onLoad() {
       this.pageNum++;
@@ -151,6 +172,9 @@ export default {
       }
       // console.log(JSON.stringify(item));
     },
+    showShoppingCart() {
+      this.isCartListVisible = !this.isCartListVisible;
+    }
   },
 };
 </script>
@@ -220,6 +244,7 @@ export default {
   }
 
   /* 禁用按钮的样式 */
+
   .cart-button[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
@@ -233,30 +258,67 @@ export default {
 
 .cart {
   position: fixed;
-  bottom: 40px; /* 距离底部的距离 */
+  bottom:60px; /* 距离底部的距离 */
   right: 20px; /* 距离右侧的距离 */
   z-index: 10; /* 确保图标在页面内容的上方 */
-  background-color: #ffffff; /* 背景色 */
-  border-radius: 50%; /* 圆形背景 */
-  padding: 15px 13px 10px 10px; /* 内边距 */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 阴影效果 */
-  cursor: pointer;
+
+  .cart-icon {
+    background-color: #ffffff; /* 背景色 */
+    border-radius: 50%; /* 圆形背景 */
+    padding: 8px; /* 内边距 */
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); /* 阴影效果 */
+    cursor: pointer;
+  }
+
+  .cart-icon .el-icon {
+    color: red;
+  }
 
   .cart-count {
     position: absolute;
-    top: -10px; /* 根据实际大小调整 */
+    display: block;
+    top: -2px; /* 根据实际大小调整 */
     right: 25%; /* 与购物车图标的中心对齐 */
     background-color: red;
     color: white;
     font-size: 12px;
-    padding: 2px 5px;
-    border-radius: 10px;
-    transform: translateX(50%);
+    padding: 1px 5px;
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+    text-align: center;
+  }
+
+  .cart-count::before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
+
+  .cart-count span {
+    display: inline-block;
+    vertical-align: middle;
   }
 }
 
 .cart:hover {
   transform: scale(1.1);
   transition: transform 0.3s ease-in-out;
+}
+
+.cart-list {
+  padding: 10px;
+  background-color: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cart-item {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.el-drawer__header{
+  margin-bottom:0;
 }
 </style>
