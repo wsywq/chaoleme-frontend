@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from "vue-router";
 
 let routes = [
     {
-        path: "",
+        path: "/",
         redirect: "/home"
     },
     {
