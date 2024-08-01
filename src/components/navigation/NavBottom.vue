@@ -1,10 +1,10 @@
 <script>
 import {ref} from "vue";
 import {defineComponent} from "vue";
-import {Dish, Edit, HomeFilled, Tools} from "@element-plus/icons-vue";
+import {Dish, Edit, HomeFilled, Present, Tools} from "@element-plus/icons-vue";
 
 export default defineComponent({
-  components: {Dish, Tools, HomeFilled, Edit}
+  components: {Present, Dish, Tools, HomeFilled, Edit}
 })
 
 let footerList = ref([])
@@ -13,31 +13,33 @@ let footerList = ref([])
 <template>
   <el-footer class="footerIcon">
     <el-row :gutter="20">
-      <el-col :span="6">
+      <el-col :span="8">
         <router-link to="/home">
           <el-icon :size="20">
             <HomeFilled/>
           </el-icon>
         </router-link>
       </el-col>
-      <el-col :span="6">
-        <router-link to="/food">
+      <el-col :span="8">
+        <router-link to="/dish">
           <el-icon>
             <Dish/>
           </el-icon>
         </router-link>
       </el-col>
-      <el-col :span="6">
-        <router-link to="/dish">
-        <el-icon>
-          <Tools/>
-        </el-icon>
+      <!--      <el-col :span="6">-->
+      <!--        <router-link to="/dish">-->
+      <!--        <el-icon>-->
+      <!--          <Tools/>-->
+      <!--        </el-icon>-->
+      <!--        </router-link>-->
+      <!--      </el-col>-->
+      <el-col :span="8">
+        <router-link to="/about">
+          <el-icon>
+            <Present/>
+          </el-icon>
         </router-link>
-      </el-col>
-      <el-col :span="6">
-        <el-icon>
-          <Menu/>
-        </el-icon>
       </el-col>
     </el-row>
   </el-footer>

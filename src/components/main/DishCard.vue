@@ -2,12 +2,6 @@
   <div v-if="total < 10">
     <div class="dish_list" v-for="item in list" :key="item.id">
       <el-card style="max-width: 480px" shadow="always">
-        <!--        <template #header>-->
-        <!--          <div class="dish-header">-->
-        <!--            <span>{{ item.name }}</span>-->
-        <!--            <el-tag type="danger" size="small">{{ item.categoryName }}</el-tag>-->
-        <!--          </div>-->
-        <!--        </template>-->
         <el-row :gutter="10" space-between>
           <el-col :span="5">
             <div class="grid-content ep-bg-purple">
@@ -20,7 +14,6 @@
           </el-col>
           <el-col :span="12" :offset="7" style="padding-left: 0px">
             <div class="content-wrapper">
-              <!--              <div class="content-row">{{ item.description }}</div>-->
               <div class="content-row card-title">{{ item.name }}</div>
               <div class="content-row">
                 <el-tag type="danger" size="small">{{
@@ -72,7 +65,7 @@
       </el-card>
     </div>
   </div>
-  <div class="cart">
+  <div class="cart" v-show="cartCount > 0">
     <el-button class="cart-icon" @click="showShoppingCart">
       <el-icon size="15">
         <ShoppingCartFull/>
@@ -88,10 +81,51 @@
       v-model="isCartListVisible"
   >
     <div class="cart-list">
-      <div class="cart-item" v-for="(item, index) in list" :key="index">
-        <img style="width: 15px;height: 15px" :src="item.imageUrl" alt="item"/>
-        <div>{{ item.name }}</div>
-        <div>数量: {{ item.currentCount }}</div>
+      <div class="cart-item" v-for="(item, index) in currentList" :key="index">
+        <el-row :gutter="10" space-between>
+          <el-col :span="3" class="cart-item_col">
+            <div class="checkbox-container">
+              <el-checkbox v-model="isChecked" style="border-color: red"></el-checkbox>
+            </div>
+          </el-col>
+          <el-col :span="4" class="cart-item_col">
+            <div class="grid-content ep-bg-purple">
+              <img style="width: 48px;height: 48px" :src="item.imageUrl" alt="item"/>
+            </div>
+          </el-col>
+          <el-col :span="11">
+            <div>{{ item.name }}</div>
+            <div>数量: {{ item.currentCount }}</div>
+          </el-col>
+          <el-col :span="6" class="cart-item_col">
+            <div class="content-row">
+              <div class="cart-container">
+                <div class="cart-control">
+                  <el-button
+                      class="cart-button"
+                      style="border: 2px solid red"
+                      @click="handleSubtractClick(item)"
+                      :disabled="item.currentCount === 0"
+                  >
+                    <el-icon :size="10" color="red">
+                      <Minus/>
+                    </el-icon>
+                  </el-button>
+                  <span class="count">{{ item.currentCount }}</span>
+                  <el-button
+                      class="cart-button"
+                      type="danger"
+                      @click="handleAddClick(item)"
+                  >
+                    <el-icon :size="10">
+                      <Plus/>
+                    </el-icon>
+                  </el-button>
+                </div>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </el-drawer>
@@ -116,7 +150,9 @@ export default {
         name: "",
         description: "",
       },
-      isCartListVisible: false
+      isCartListVisible: false,
+      currentList: [],
+      isChecked: false
     };
   },
   computed: {
@@ -163,14 +199,22 @@ export default {
       this.getList();
     },
     handleAddClick(item) {
-      item.currentCount++;
-      // console.log(JSON.stringify(item));
+      const index = this.currentList.indexOf(item);
+      if (index > -1) {
+        this.currentList[index].currentCount++;
+      } else {
+        item.currentCount++;
+        this.currentList.push(item);
+      }
+      console.log(this.currentList);
     },
     handleSubtractClick(item) {
-      if (item.currentCount) {
-        item.currentCount--;
+      const index = this.currentList.indexOf(item);
+      this.currentList[index].currentCount--;
+      if (this.currentList[index].currentCount === 0) {
+        this.currentList.splice(index, 1);
       }
-      // console.log(JSON.stringify(item));
+      console.log(this.currentList);
     },
     showShoppingCart() {
       this.isCartListVisible = !this.isCartListVisible;
@@ -221,7 +265,8 @@ export default {
 .cart-container {
   display: flex;
   justify-content: flex-end; /* 将控件放在容器的右侧 */
-  padding: 0 0 10px 10px;
+  margin-left: 5px;
+  padding-bottom: 10px;
 
   .cart-control {
     display: flex;
@@ -258,7 +303,7 @@ export default {
 
 .cart {
   position: fixed;
-  bottom:60px; /* 距离底部的距离 */
+  bottom: 60px; /* 距离底部的距离 */
   right: 20px; /* 距离右侧的距离 */
   z-index: 10; /* 确保图标在页面内容的上方 */
 
@@ -318,7 +363,57 @@ export default {
   border-bottom: 1px solid #eee;
 }
 
-.el-drawer__header{
-  margin-bottom:0;
+.el-drawer__header {
+  margin-bottom: 0;
+}
+
+.cart-item_col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox-container {
+  display: inline-block;
+  position: relative;
+}
+
+.cart-checkbox {
+  /* 隐藏默认的checkbox*/
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.cart-checkbox + span {
+  /* 自定义checkbox样式 */
+  display: inline-block;
+  width: 20px; /* 圆形的大小 */
+  height: 20px;
+  border: 2px solid #dcdfe6;
+  border-radius: 50%;
+  margin-right: 5px;
+  box-sizing: border-box;
+  background-color: red;
+}
+
+.cart-checkbox:checked + span {
+  /* 当checkbox被勾选时改变样式 */
+  background-color: red;
+  border: none;
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
 }
 </style>
