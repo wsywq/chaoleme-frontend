@@ -81,11 +81,15 @@
       v-model="isCartListVisible"
   >
     <div class="cart-list">
+      <div class="cart-header">
+        <el-checkbox v-model="isCheckAll" :indeterminate="isIndeterminate" @change="handleCheckAll">全选</el-checkbox>
+      </div>
       <div class="cart-item" v-for="(item, index) in currentList" :key="index">
         <el-row :gutter="10" space-between>
           <el-col :span="3" class="cart-item_col">
             <div class="checkbox-container">
-              <el-checkbox v-model="isChecked" style="border-color: red"></el-checkbox>
+              <el-checkbox v-model="item.isChecked" style="border-color: red"
+                           @change="handleCheckItem(index, $event)"></el-checkbox>
             </div>
           </el-col>
           <el-col :span="4" class="cart-item_col">
@@ -152,7 +156,9 @@ export default {
       },
       isCartListVisible: false,
       currentList: [],
-      isChecked: false
+      isChecked: false,
+      isIndeterminate: false,
+      isCheckAll: true
     };
   },
   computed: {
@@ -204,17 +210,30 @@ export default {
         this.currentList[index].currentCount++;
       } else {
         item.currentCount++;
+        item.isChecked = true;
         this.currentList.push(item);
       }
-      console.log(this.currentList);
     },
     handleSubtractClick(item) {
       const index = this.currentList.indexOf(item);
       this.currentList[index].currentCount--;
       if (this.currentList[index].currentCount === 0) {
         this.currentList.splice(index, 1);
+        if (this.currentList.length === 0) {
+          this.isCartListVisible = false;
+        }
       }
-      console.log(this.currentList);
+    },
+    handleCheckAll(val) {
+      this.currentList.forEach(item => val ? item.isChecked = true : item.isChecked = false);
+      this.isIndeterminate = false;
+      this.isCheckAll = val;
+    },
+    handleCheckItem(idx, isChecked) {
+      this.currentList[idx].isChecked = isChecked;
+      const checkNum = this.currentList.filter(val => val.isChecked === false).length;
+      this.isCheckAll = checkNum <= 0;
+      this.isIndeterminate = checkNum === this.currentList.length ? false : !this.isCheckAll;
     },
     showShoppingCart() {
       this.isCartListVisible = !this.isCartListVisible;
@@ -376,44 +395,5 @@ export default {
 .checkbox-container {
   display: inline-block;
   position: relative;
-}
-
-.cart-checkbox {
-  /* 隐藏默认的checkbox*/
-  opacity: 0;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.cart-checkbox + span {
-  /* 自定义checkbox样式 */
-  display: inline-block;
-  width: 20px; /* 圆形的大小 */
-  height: 20px;
-  border: 2px solid #dcdfe6;
-  border-radius: 50%;
-  margin-right: 5px;
-  box-sizing: border-box;
-  background-color: red;
-}
-
-.cart-checkbox:checked + span {
-  /* 当checkbox被勾选时改变样式 */
-  background-color: red;
-  border: none;
-
-  &::before {
-    content: '';
-    display: inline-block;
-    width: 6px;
-    height: 12px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-    position: absolute;
-    left: 50%;
-    top: 50%;
-  }
 }
 </style>
