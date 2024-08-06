@@ -14,26 +14,19 @@ let footerList = ref([])
   <el-footer class="footerIcon">
     <el-row :gutter="20">
       <el-col :span="8">
-        <router-link to="/home">
-          <el-icon :size="20">
-            <HomeFilled/>
-          </el-icon>
-        </router-link>
-      </el-col>
-      <el-col :span="8">
         <router-link to="/dish">
           <el-icon>
             <Dish/>
           </el-icon>
         </router-link>
       </el-col>
-      <!--      <el-col :span="6">-->
-      <!--        <router-link to="/dish">-->
-      <!--        <el-icon>-->
-      <!--          <Tools/>-->
-      <!--        </el-icon>-->
-      <!--        </router-link>-->
-      <!--      </el-col>-->
+      <el-col :span="8">
+        <router-link to="/home">
+          <el-icon :size="20">
+            <HomeFilled/>
+          </el-icon>
+        </router-link>
+      </el-col>
       <el-col :span="8">
         <router-link to="/about">
           <el-icon>

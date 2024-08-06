@@ -83,6 +83,7 @@
     <div class="cart-list">
       <div class="cart-header">
         <el-checkbox v-model="isCheckAll" :indeterminate="isIndeterminate" @change="handleCheckAll">全选</el-checkbox>
+        <el-button type="danger" @click="submitCart" >去出餐</el-button>
       </div>
       <div class="cart-item" v-for="(item, index) in currentList" :key="index">
         <el-row :gutter="10" space-between>
@@ -237,6 +238,9 @@ export default {
     },
     showShoppingCart() {
       this.isCartListVisible = !this.isCartListVisible;
+    },
+    submitCart() {
+      console.log("@", this.currentList);
     }
   },
 };
@@ -374,6 +378,12 @@ export default {
   padding: 10px;
   background-color: white;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cart-header {
+  display:flex;
+  justify-content: space-between; /* 左右间隔分布 */
+  align-items: center;
 }
 
 .cart-item {
