@@ -32,7 +32,7 @@ export function addDish(data) {
     })
 }
 
-export function updateDish(params) {
+export function updateDish(data) {
     return request({
         url: '/dish',
         method: 'put',

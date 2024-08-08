@@ -83,7 +83,7 @@
     <div class="cart-list">
       <div class="cart-header">
         <el-checkbox v-model="isCheckAll" :indeterminate="isIndeterminate" @change="handleCheckAll">全选</el-checkbox>
-        <el-button type="danger" @click="submitCart" >去出餐</el-button>
+        <el-button type="danger" @click="submitCart">去出餐</el-button>
       </div>
       <div class="cart-item" v-for="(item, index) in currentList" :key="index">
         <el-row :gutter="10" space-between>
@@ -139,6 +139,7 @@
 <script>
 import {closeToast, showLoadingToast} from "vant";
 import {getDishPage} from "@/http/dish.js";
+import {submitDishList} from "@/http/order.js";
 import {Minus, Plus, ShoppingCartFull} from "@element-plus/icons-vue";
 
 export default {
@@ -164,7 +165,7 @@ export default {
   },
   computed: {
     cartCount() {
-      return this.list.reduce((total, item) => total + item.currentCount, 0);
+      return this.currentList.reduce((total, item) => total + item.currentCount, 0);
     },
   },
   created() {
@@ -186,6 +187,7 @@ export default {
           .then(
               (res) => {
                 this.list = [...this.list, ...res.data.records];
+                this.list.forEach(item => item.currentCount = 0);
                 this.loading = false;
                 this.total = res.data.total;
                 this.finished = this.list.length >= res.data.total;
@@ -241,6 +243,10 @@ export default {
     },
     submitCart() {
       console.log("@", this.currentList);
+      submitDishList(this.currentList).then(res => console.log(res), err => console.log(err));
+      this.isCartListVisible = !this.isCartListVisible;
+      this.currentList = [];
+      this.list.forEach(item => item.currentCount = 0);
     }
   },
 };
@@ -381,7 +387,7 @@ export default {
 }
 
 .cart-header {
-  display:flex;
+  display: flex;
   justify-content: space-between; /* 左右间隔分布 */
   align-items: center;
 }
