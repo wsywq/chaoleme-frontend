@@ -3,12 +3,14 @@ import {createRouter, createWebHistory} from "vue-router";
 let routes = [
     {
         path: "/",
-        redirect: "/dish"
+        name: "",
+        redirect: "dish"
     },
     {
         path: "",
+        name: "",
         // component: () => import("@/views/DishList.vue"),
-        redirect: "/dish"
+        redirect: "dish"
     },
     {
         path: "/home",

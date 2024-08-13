@@ -279,6 +279,7 @@ export default {
   flex-direction: column; /* 设置为多行排列 */
   justify-content: space-around; /* 均分空间 */
   height: 100%;
+  padding-left: 5px;
 
   .content-row {
     flex: 1; /* 每个 .row 占一行 */
