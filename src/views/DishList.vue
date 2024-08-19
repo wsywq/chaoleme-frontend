@@ -35,7 +35,7 @@ import {
 } from '@element-plus/icons-vue'
 import AsideMenu from "@/components/navigation/AsideMenu.vue";
 import NavHeader from "@/components/navigation/NavHeader.vue";
-import DishCard from "@/components/main/DishCard.vue";
+import DishCard from "@/components/dish/DishCard.vue";
 
 
 export default {

@@ -22,7 +22,7 @@
                 </el-tag>
               </div>
               <div class="content-row">
-                辣度:
+                辣度
                 <img
                     v-for="n in item.heatLevel"
                     :key="n"
@@ -33,7 +33,7 @@
                 />
               </div>
               <div class="content-row">
-                <span style="color: #dedfe0">已点: {{ item.count }}</span>
+                <span style="color: #dedfe0">已点:{{ item.count }}</span>
                 <div class="cart-container">
                   <div class="cart-control">
                     <el-button

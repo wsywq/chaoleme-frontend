@@ -4,8 +4,8 @@ const request = axios.create({
     headers: {
         'Content-Type': 'application/json;charset=utf-8'
     },
-    // baseURL:"http://localhost:8080",
-    baseURL:"http://106.54.32.95:8080",
+    baseURL:"http://localhost:8080",
+    // baseURL:"http://106.54.32.95:8080",
     timeout:5000
 });
 

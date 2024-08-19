@@ -2,22 +2,22 @@
   <div class="weather-container">
     <div>
       <div>
-        <img src="/public/calendar.svg" alt="calendar" class="weather-icon"/>
+        <img src="/calendar.svg" alt="calendar" class="weather-icon"/>
         今天是2024年8月13号
       </div>
       <div>
-        <img src="/public/location.svg" alt="location" class="weather-icon"/>
+        <img src="/location.svg" alt="location" class="weather-icon"/>
         安徽合肥
       </div>
       <div>
-        <img src="/public/suncloud.svg" alt="suncloud" class="weather-icon"/>
+        <img src="/suncloud.svg" alt="suncloud" class="weather-icon"/>
         天气
       </div>
       <div>
-        <img src="/public/temperature.svg" alt="lowest" class="weather-icon"/>最低温度
+        <img src="/temperature.svg" alt="lowest" class="weather-icon"/>最低温度
       </div>
       <div>
-        <img src="/public/temperature.svg" alt="highest" class="weather-icon"/>最高温度
+        <img src="/temperature.svg" alt="highest" class="weather-icon"/>最高温度
       </div>
     </div>
   </div>

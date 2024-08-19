@@ -1,9 +1,9 @@
 <template>
-  <el-form :model="dialogForm" :rules="formRules" label-width="40px">
+  <el-form :model="dialogForm" label-width="40px">
     <el-row>
       <el-col>
-        <el-form-item label="标题:" prop="title">
-          <el-input v-model="dialogForm.title" type="text" placeholder="请输入菜品名" maxlength="200"
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="dialogForm.name" type="text" placeholder="请输入菜品名" maxlength="200"
                     show-word-limit></el-input>
         </el-form-item>
       </el-col>
@@ -28,16 +28,16 @@
     </el-row>
     <el-row>
       <el-col>
-        <el-form-item label="上传菜品图片">
+        <el-form-item label="美图">
           <el-upload :limit="1" accept="image/jpeg,image/jpg"
                      :auto-upload="false"
                      action="#"
-                     :before-upload="compressImage"
                      :on-change="(file, fileList) => handleChange(file,fileList)"
+                     :before-upload="handleBeforeUpload"
                      :on-preview="handlePreview"
                      :on-remove="handleRemove"
                      list-type="picture"
-                     :show-file-list="false" :disabled="!!pcImgId">
+                     :disabled="!!imgUrl">
             <el-button type="primary">上传图片</el-button>
           </el-upload>
         </el-form-item>
@@ -45,14 +45,14 @@
     </el-row>
     <el-row>
       <el-col>
-        <el-form-item label="内容：" prop="content">
-          <el-input type="textarea" v-model="dialogForm.content" maxlength="500" show-word-limit></el-input>
+        <el-form-item label="做法" prop="content">
+          <el-input type="textarea" v-model="dialogForm.description" maxlength="500" show-word-limit></el-input>
         </el-form-item>
       </el-col>
     </el-row>
   </el-form>
   <div slot="footer" class="dialog-footer">
-    <el-button type="primary" :loading="submitLoading" @click="submitForm">确定</el-button>
+    <el-button type="primary" :loading="submitLoading" @click="submitForm">提交</el-button>
   </div>
 </template>
 
@@ -102,6 +102,7 @@ export default {
     },
     compressImage(file) {
       return new Promise((resolve, reject) => {
+        console.log('开始压缩图片');
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = (e) => {
@@ -135,9 +136,30 @@ export default {
         };
       });
     },
+    handleBeforeUpload(file) {
+      console.log('handle befoer upload');
+      this.compressImage(file).then(compressedFile => {
+        file = compressedFile;
+        return true;
+      }).catch(er => {
+        console.log(`compress image file ${JSON.stringify(er)}`);
+        ElMessage.error('图片压缩失败');
+        return false;
+      });
+    },
     handleChange(file, fileList) {
       this.imgUrl = file.url;
       this.uploadImage = file.raw;
+      // this.compressImage(file).then(compressedFile => {
+      //   file = compressedFile;
+      //
+      // }).catch(er => {
+      //   ElMessage.error('图片压缩失败');
+      // });
+      console.log(`compress image file ${JSON.stringify(file)}`);
+    },
+    handleSuccess(response, file, fileList) {
+
     },
     handlePreview(file) {
       console.log(file);
@@ -165,18 +187,4 @@ export default {
 </script>
 
 <style scoped>
-.mask {
-  opacity: 0;
-  position: absolute;
-  top: 0;
-  width: 148px;
-  height: 148px;
-  border-radius: 6px;
-  background-color: rgba(0, 0, 0, 0.5);
-  transition: all 0.3s;
-}
-
-.mask:hover {
-  opacity: 1;
-}
 </style>
