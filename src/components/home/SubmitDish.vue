@@ -158,9 +158,6 @@ export default {
       // });
       console.log(`compress image file ${JSON.stringify(file)}`);
     },
-    handleSuccess(response, file, fileList) {
-
-    },
     handlePreview(file) {
       console.log(file);
     },
@@ -173,11 +170,23 @@ export default {
       uploadFile(formData).then(res => {
         this.dialogForm.imageUrl = res.data;
         addDish(this.dialogForm).then(result => {
-          console.log(JSON.stringify(result));
+          if(result.code === 200) {
+            // 清空提交数据
+            this.dialogForm = {
+              name: '',
+              categoryId: '',
+              imageUrl: '',
+              description: '',
+              heatLevel: 1
+            };
+            ElMessage.success('添加菜品成功');
+          }
         }, error => {
           console.log(JSON.stringify(error));
+          ElMessage.error('添加菜品失败，请稍后重试');
         })
       }, err => {
+        ElMessage.error('上传图片失败，请稍后重试');
         console.log(JSON.stringify(err));
       })
     }
