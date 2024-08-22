@@ -33,8 +33,6 @@
                      :auto-upload="false"
                      action="#"
                      :on-change="(file, fileList) => handleChange(file,fileList)"
-                     :before-upload="handleBeforeUpload"
-                     :on-preview="handlePreview"
                      :on-remove="handleRemove"
                      list-type="picture"
                      :disabled="!!imgUrl">
@@ -56,142 +54,86 @@
   </div>
 </template>
 
-<script>
+<script setup>
 
-import {getCategoryList} from "@/http/category.js";
-import {ElMessage} from "element-plus";
-import {uploadFile} from "@/http/common.js";
-import {addDish} from "@/http/dish.js";
+import { ref, reactive, nextTick, watch } from 'vue';
+import { ElMessage } from 'element-plus';
+import { getCategoryList } from "@/http/category.js";
+import { uploadFile } from "@/http/common.js";
+import { addDish } from "@/http/dish.js";
+import { compress } from "@/utils/compress.js";
 
-export default {
-  name: "SubmitDish",
-  components: {},
-  data() {
-    return {
-      heatLevelList: [1, 2, 3, 4, 5],
-      dialogForm: {
-        name: '',
-        categoryId: '',
-        imageUrl: '',
-        description: '',
-        heatLevel: 1
-      },
-      rules: {
-        title: [{required: true, message: '标题不能为空', trigger: 'blur'}]
-      },
-      categoryList: {},
-      imgUrl: '',
-      uploadImage: undefined,
-      showImgDialog: false,
-      submitLoading: false,
-    };
-  },
-  computed() {
+const heatLevelList = ref([1, 2, 3, 4, 5]);
+const dialogForm = ref({
+  name: '',
+  categoryId: '',
+  imageUrl: '',
+  description: '',
+  heatLevel: 1
+});
+const rules = reactive({
+  title: [{required: true, message: '标题不能为空', trigger: 'blur'}]
+});
+const categoryList = ref({});
+const imgUrl = ref('');
+const uploadImage = ref(null);
+const showImgDialog = ref(false);
+const submitLoading = ref(false);
 
-  },
-  created() {
-    this.getCategoryList();
-  },
-  methods: {
-    getCategoryList() {
-      getCategoryList().then(res => {
-        this.categoryList = res.data;
-      }, err => {
-        console.log('get category failed =' + JSON.stringify(err));
-      });
-    },
-    compressImage(file) {
-      return new Promise((resolve, reject) => {
-        console.log('开始压缩图片');
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (e) => {
-          const img = new Image();
-          img.src = e.target.result;
-          img.onload = () => {
-            // 创建canvas
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            // 设置canvas尺寸为172x172
-            canvas.width = 172;
-            canvas.height = 172;
-            // 清除画布内容
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // 将图片绘制到canvas上
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            // 压缩图片并转换为Blob
-            canvas.toBlob((blob) => {
-              resolve(blob);
-            }, 'image/jpeg', 0.8); // JPEG格式，质量设置为0.8
-          };
-          img.onerror = (error) => {
-            reject(error);
-            ElMessage.error('图片加载失败');
-          };
+// 组件挂载时获取分类列表
+nextTick(() => {
+  getCategoryList().then(res => {
+    categoryList.value = res.data;
+  });
+});
+
+// 处理图片上传和压缩
+const handleChange = (file, fileList) => {
+  // 回显
+  imgUrl.value = URL.createObjectURL(file.raw);
+  // 调用自定义的压缩方法
+  compress(file.raw, function (val) {
+    let newFile = new File([val], file.name, { type: file.raw.type });
+    uploadImage.value = newFile; // 直接赋值
+    console.log('newFileURL', URL.createObjectURL(val));
+  });
+};
+
+// 处理图片移除
+const handleRemove = (uploadFile, uploadFiles) => {
+  console.log(uploadFile, uploadFiles);
+};
+
+// 提交表单
+const submitForm = () => {
+  const formData = new FormData();
+  formData.append("image", uploadImage.value);
+  submitLoading.value = true;
+  uploadFile(formData).then(res => {
+    dialogForm.value.imageUrl = res.data;
+    addDish(dialogForm.value).then(result => {
+      if (result.code === 200) {
+        // 清空提交数据
+        dialogForm.value = {
+          name: '',
+          categoryId: '',
+          imageUrl: '',
+          description: '',
+          heatLevel: 1
         };
-
-        reader.onerror = (error) => {
-          reject(error);
-          ElMessage.error('图片读取失败');
-        };
-      });
-    },
-    handleBeforeUpload(file) {
-      console.log('handle befoer upload');
-      this.compressImage(file).then(compressedFile => {
-        file = compressedFile;
-        return true;
-      }).catch(er => {
-        console.log(`compress image file ${JSON.stringify(er)}`);
-        ElMessage.error('图片压缩失败');
-        return false;
-      });
-    },
-    handleChange(file, fileList) {
-      this.imgUrl = file.url;
-      this.uploadImage = file.raw;
-      // this.compressImage(file).then(compressedFile => {
-      //   file = compressedFile;
-      //
-      // }).catch(er => {
-      //   ElMessage.error('图片压缩失败');
-      // });
-      console.log(`compress image file ${JSON.stringify(file)}`);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleRemove(uploadFile, uploadFiles) {
-      console.log(uploadFile, uploadFiles);
-    },
-    submitForm() {
-      let formData = new FormData();
-      formData.append("image", this.uploadImage);
-      uploadFile(formData).then(res => {
-        this.dialogForm.imageUrl = res.data;
-        addDish(this.dialogForm).then(result => {
-          if(result.code === 200) {
-            // 清空提交数据
-            this.dialogForm = {
-              name: '',
-              categoryId: '',
-              imageUrl: '',
-              description: '',
-              heatLevel: 1
-            };
-            ElMessage.success('添加菜品成功');
-          }
-        }, error => {
-          console.log(JSON.stringify(error));
-          ElMessage.error('添加菜品失败，请稍后重试');
-        })
-      }, err => {
-        ElMessage.error('上传图片失败，请稍后重试');
-        console.log(JSON.stringify(err));
-      })
-    }
-  }
-}
+        ElMessage.success('添加菜品成功');
+      }
+    }, error => {
+      console.log(JSON.stringify(error));
+      ElMessage.error('添加菜品失败，请稍后重试');
+    });
+    submitLoading.value = false;
+  }, err => {
+    ElMessage.error('上传图片失败，请稍后重试');
+    console.log(JSON.stringify(err));
+    submitLoading.value = false;
+  });
+};
 
 </script>
 
