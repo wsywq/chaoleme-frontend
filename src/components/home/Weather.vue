@@ -25,7 +25,7 @@
 
 <script setup>
 
-import {nextTick, ref} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import {getTodayWeather} from "@/http/Weather.js";
 import {getUserLocation} from "@/utils/geo.js";
 
@@ -41,10 +41,8 @@ const seconds = now.getSeconds();
 
 const weatherForm = ref({});
 const iconStyle = ref("");
-
-fetchData();
-
-function fetchData() {
+const fetchData = () => {
+  // 获取当前用户经纬度信息
   getUserLocation().then(res => {
     let queryParams = {
       location: res.longitude + "," + res.latitude
@@ -58,6 +56,10 @@ function fetchData() {
     });
   });
 }
+
+onMounted(()=>{
+  fetchData();
+})
 
 </script>
 

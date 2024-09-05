@@ -2,14 +2,17 @@
 import Weather from "@/components/home/Weather.vue";
 import {ref} from "vue";
 import SubmitDish from "@/components/home/SubmitDish.vue";
+import Order from "@/components/home/Order.vue";
 
 const activeName = ref('1');
 </script>
 
 <template>
   <el-container>
-    <el-header>
-      <p>欢迎小美宝！</p>
+    <el-header class="background-image">
+      <div>
+        <p>欢迎小美宝！</p>
+      </div>
     </el-header>
     <el-main>
       <el-collapse v-model="activeName" accordion>
@@ -29,18 +32,13 @@ const activeName = ref('1');
             <SubmitDish/>
           </template>
         </el-collapse-item>
-        <el-collapse-item title="Efficiency" name="3">
-          <div>
-            Simplify the process: keep operating process simple and intuitive;
-          </div>
-          <div>
-            Definite and clear: enunciate your intentions clearly so that the
-            users can quickly understand and make decisions;
-          </div>
-          <div>
-            Easy to identify: the interface should be straightforward, which helps
-            the users to identify and frees them from memorizing and recalling.
-          </div>
+        <el-collapse-item name="3">
+          <template #title>
+            <img src="/public/order.svg" alt="order" class="collapse-icon"/>看看今天要吃的菜吧^.^
+          </template>
+          <template #default>
+            <Order/>
+          </template>
         </el-collapse-item>
         <el-collapse-item title="Controllability" name="4">
           <div>
@@ -59,26 +57,16 @@ const activeName = ref('1');
 </template>
 
 <style scoped>
-.el-row {
-  margin-bottom: 20px;
-}
-
-.el-row:last-child {
-  margin-bottom: 0;
-}
-
-.el-col {
-  border-radius: 4px;
-}
-
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
-
 .collapse-icon {
   margin: 5px;
-  width: 16px;
-  height: 16px;
+  width: 25px;
+  height: 25px;
 }
+
+.background-image {
+  background-image: url('/public/ahead.png');
+  background-size: cover; /* 根据需要设置 */
+  background-position: center; /* 根据需要设置 */
+}
+
 </style>
