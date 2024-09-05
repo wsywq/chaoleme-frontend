@@ -23,11 +23,6 @@ let routes = [
         component: () => import("@/views/DishList.vue"),
     },
     {
-        path: "/food",
-        name: 'food',
-        component: () => import("@/views/Food.vue"),
-    },
-    {
         path: "/about",
         name: 'about',
         component: () => import("@/views/About.vue"),

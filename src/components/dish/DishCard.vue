@@ -16,10 +16,7 @@
             <div class="content-wrapper">
               <div class="content-row card-title">{{ item.name }}</div>
               <div class="content-row">
-                <el-tag type="danger" size="small">{{
-                    item.categoryName
-                  }}
-                </el-tag>
+                <el-tag type="danger" size="small">{{ item.categoryName }}</el-tag>
               </div>
               <div class="content-row">
                 辣度
@@ -136,121 +133,115 @@
   </el-drawer>
 </template>
 
-<script>
+<script setup>
+import {ref, reactive, onMounted, computed} from 'vue';
+import {ElCard, ElRow, ElCol, ElTag, ElButton, ElIcon, ElDrawer, ElCheckbox} from 'element-plus';
+import {Minus, Plus, ShoppingCartFull} from '@element-plus/icons-vue';
+import {getDishPage} from '@/http/dish.js';
+import {submitDishList} from '@/http/order.js';
 import {closeToast, showLoadingToast} from "vant";
-import {getDishPage} from "@/http/dish.js";
-import {submitDishList} from "@/http/order.js";
-import {Minus, Plus, ShoppingCartFull} from "@element-plus/icons-vue";
 
-export default {
-  name: "DishCard",
-  components: {ShoppingCartFull, Minus, Plus},
-  data() {
-    return {
-      list: [],
-      pageNum: 1,
-      pageSize: 10,
-      total: null,
-      showResult: false,
-      dishItem: {
-        name: "",
-        description: "",
-      },
-      isCartListVisible: false,
-      currentList: [],
-      isChecked: false,
-      isIndeterminate: false,
-      isCheckAll: true
+const list = ref([]);
+const pageNum = ref(1);
+const pageSize = ref(10);
+const total = ref(null);
+const showResult = ref(false);
+const dishItem = reactive({name: "", description: ""});
+const isCartListVisible = ref(false);
+const currentList = ref([]);
+const isChecked = ref(false);
+const isIndeterminate = ref(false);
+const isCheckAll = ref(true);
+
+const cartCount = computed(() => {
+  return currentList.value.reduce((total, item) => total + item.currentCount, 0);
+});
+
+onMounted(() => {
+  getList();
+});
+
+const getList = async () => {
+  const toast = showLoadingToast({
+    duration: 0,
+    forbidClick: true,
+    message: "正在加载中...",
+  });
+  try {
+    const queryParams = {
+      pageNum: pageNum.value,
+      pageSize: pageSize.value,
     };
-  },
-  computed: {
-    cartCount() {
-      return this.currentList.reduce((total, item) => total + item.currentCount, 0);
-    },
-  },
-  created() {
-    this.getList();
-  },
-  methods: {
-    getList() {
-      let _this = this;
-      const toast = showLoadingToast({
-        duration: 0,
-        forbidClick: true,
-        message: "正在加载中...",
-      });
-      let queryParams = {
-        pageNum: this.pageNum,
-        pageSize: 10,
-      };
-      getDishPage(queryParams)
-          .then(
-              (res) => {
-                this.list = [...this.list, ...res.data.records];
-                this.list.forEach(item => item.currentCount = 0);
-                this.loading = false;
-                this.total = res.data.total;
-                this.finished = this.list.length >= res.data.total;
-              },
-              (err) => {
-                console.error(JSON.stringify(err));
-                this.error = true;
-              }
-          )
-          .catch((error) => {
-            console.error(JSON.stringify(error));
-            this.error = true;
-          })
-          .finally(closeToast());
-    },
-    onLoad() {
-      this.pageNum++;
-      this.getList();
-    },
-    handleAddClick(item) {
-      const index = this.currentList.indexOf(item);
-      if (index > -1) {
-        this.currentList[index].currentCount++;
-      } else {
-        item.currentCount++;
-        item.isChecked = true;
-        this.currentList.push(item);
-      }
-    },
-    handleSubtractClick(item) {
-      const index = this.currentList.indexOf(item);
-      this.currentList[index].currentCount--;
-      if (this.currentList[index].currentCount === 0) {
-        this.currentList.splice(index, 1);
-        if (this.currentList.length === 0) {
-          this.isCartListVisible = false;
-        }
-      }
-    },
-    handleCheckAll(val) {
-      this.currentList.forEach(item => val ? item.isChecked = true : item.isChecked = false);
-      this.isIndeterminate = false;
-      this.isCheckAll = val;
-    },
-    handleCheckItem(idx, isChecked) {
-      this.currentList[idx].isChecked = isChecked;
-      const checkNum = this.currentList.filter(val => val.isChecked === false).length;
-      this.isCheckAll = checkNum <= 0;
-      this.isIndeterminate = checkNum === this.currentList.length ? false : !this.isCheckAll;
-    },
-    showShoppingCart() {
-      this.isCartListVisible = !this.isCartListVisible;
-    },
-    submitCart() {
-      console.log("@", this.currentList);
-      submitDishList(this.currentList).then(res => console.log(res), err => console.log(err));
-      this.isCartListVisible = !this.isCartListVisible;
-      this.currentList = [];
-      this.list.forEach(item => item.currentCount = 0);
+    const res = await getDishPage(queryParams);
+    list.value = [...list.value, ...res.data.records];
+    list.value.forEach(item => item.currentCount = 0);
+    total.value = res.data.total;
+    showResult.value = list.value.length >= res.data.total;
+  } catch (err) {
+    console.error(JSON.stringify(err));
+  } finally {
+    closeToast();
+  }
+};
+
+const onLoad = () => {
+  pageNum.value++;
+  getList();
+};
+
+const handleAddClick = (item) => {
+  const index = currentList.value.indexOf(item);
+  if (index > -1) {
+    currentList.value[index].currentCount++;
+  } else {
+    item.currentCount++;
+    item.isChecked = true;
+    currentList.value.push(item);
+  }
+};
+
+const handleSubtractClick = (item) => {
+  const index = currentList.value.indexOf(item);
+  currentList.value[index].currentCount--;
+  if (currentList.value[index].currentCount === 0) {
+    currentList.value.splice(index, 1);
+    if (currentList.value.length === 0) {
+      isCartListVisible.value = false;
     }
-  },
+  }
+};
+
+const handleCheckAll = (val) => {
+  currentList.value.forEach(item => item.isChecked = val);
+  isIndeterminate.value = false;
+  isCheckAll.value = val;
+};
+
+const handleCheckItem = (idx, isChecked) => {
+  currentList.value[idx].isChecked = isChecked;
+  const checkNum = currentList.value.filter(val => val.isChecked === false).length;
+  isCheckAll.value = checkNum <= 0;
+  isIndeterminate.value = checkNum === currentList.value.length ? false : !isCheckAll.value;
+};
+
+const showShoppingCart = () => {
+  isCartListVisible.value = !isCartListVisible.value;
+};
+
+const submitCart = () => {
+  console.log("@", currentList.value);
+  submitDishList(currentList.value).then(res => console.log(res), err => console.log(err));
+  isCartListVisible.value = !isCartListVisible.value;
+  currentList.value = [];
+  list.value.forEach(item => item.currentCount = 0);
 };
 </script>
+
+<style scoped>
+.common-layout {
+  /* 样式保持不变 */
+}
+</style>
 
 <style lang="less" scoped>
 .dish_list {

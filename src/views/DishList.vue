@@ -2,20 +2,14 @@
   <div class="common-layout">
     <el-container>
       <el-header class="nav-header">
-        <template #default>
-          <NavHeader/>
-        </template>
+        <NavHeader/>
       </el-header>
       <el-container>
         <el-aside width="95px" class="nav-aside">
-          <template #default>
-            <AsideMenu/>
-          </template>
+          <AsideMenu/>
         </el-aside>
         <el-main>
-          <template #default>
-            <DishCard/>
-          </template>
+          <DishCard/>
         </el-main>
       </el-container>
     </el-container>
@@ -23,85 +17,71 @@
   <NavBottom/>
 </template>
 
-<script>
-import {getDishList, getDishPage} from "@/http/dish.js";
-import {closeToast, showLoadingToast} from "vant";
+<script setup>
+import {ref, onMounted} from 'vue';
+import {ElContainer, ElHeader, ElAside, ElMain} from 'element-plus';
+import {getDishPage} from "@/http/dish.js";
+import {showLoadingToast, closeToast} from 'vant';
 import NavBottom from "@/components/navigation/NavBottom.vue";
-import {
-  Document,
-  Menu as IconMenu,
-  Location,
-  Setting, Dish, Share,
-} from '@element-plus/icons-vue'
-import AsideMenu from "@/components/navigation/AsideMenu.vue";
 import NavHeader from "@/components/navigation/NavHeader.vue";
+import AsideMenu from "@/components/navigation/AsideMenu.vue";
 import DishCard from "@/components/dish/DishCard.vue";
 
+// 创建响应式数据
+const imgUrl = ref('xxx');
+const loading = ref(false);
+const finished = ref(false);
+const list = ref([]);
+const pageNum = ref(1);
+const error = ref(false);
+const total = ref('');
+const showResult = ref(false);
+const dishName = ref('');
+const showDishDetail = ref(false);
+const dishItem = ref({name: "", description: ""});
+const isCollapse = ref(true);
 
-export default {
-  name: "DishList",
-  components: {DishCard, NavHeader, AsideMenu, Share, Dish, Location, NavBottom},
-  data() {
-    return {
-      imgUrl: 'xxx',
-      loading: false,
-      finished: false,
-      list: [],
-      pageNum: 1,
-      error: false,
-      text: '',
-      total: '',
-      showResult: false,
-      dishName: '',
-      showDishDetail: false,
-      dishItem: {
-        name: "",
-        description: ""
-      },
-      isCollapse: true
-    }
-  },
-  computed: {},
-  created() {
-    this.dishName = '';
-    this.getList();
-  },
-  methods: {
-    getList() {
-      let _this = this;
-      const toast = showLoadingToast({
-        duration: 0,
-        forbidClick: true,
-        message: '正在加载中...',
-      });
-      let queryParams = {
-        pageNum: this.pageNum,
-        pageSize: 10
-      }
-      getDishPage(queryParams).then(res => {
-        this.list = [...this.list, ...res.data.records];
-        this.loading = false;
-        this.total = res.data.total;
-        this.finished = this.list.length >= res.data.total;
-      }, err => {
-        console.error(JSON.stringify(err));
-        this.error = true;
-      }).catch(error => {
-        console.error(JSON.stringify(error));
-        this.error = true;
-      }).finally(closeToast());
-    },
-    onLoad() {
-      this.pageNum++;
-      this.getList();
-    },
-    goDetail(item) {
-      this.showDishDetail = true;
-      this.dishItem.name = item.name;
-      this.dishItem.description = item.description;
-    }
+// 生命周期钩子
+onMounted(() => {
+  dishName.value = '';
+});
+
+// 方法
+const getList = async () => {
+  const toast = showLoadingToast({
+    duration: 0,
+    forbidClick: true,
+    message: '正在加载中...',
+  });
+  try {
+    const queryParams = {
+      pageNum: pageNum.value,
+      pageSize: 10
+    };
+    const res = await getDishPage(queryParams);
+    list.value = [...list.value, ...res.data.records];
+    loading.value = false;
+    total.value = res.data.total;
+    finished.value = list.value.length >= res.data.total;
+  } catch (err) {
+    console.error(JSON.stringify(err));
+    error.value = true;
+  } finally {
+    closeToast(toast);
   }
-}
+};
+
+// const onLoad = () => {
+//   pageNum.value++;
+//   getList();
+// };
+
+const goDetail = (item) => {
+  showDishDetail.value = true;
+  dishItem.value.name = item.name;
+  dishItem.value.description = item.description;
+};
+
 </script>
 
 <style lang="less" scoped>
@@ -119,7 +99,7 @@ export default {
 }
 
 .el-main {
-  margin:150px 0 60px 85px;
+  margin: 150px 0 60px 85px;
   padding: 5px 0 10px 10px;
 }
 
@@ -132,7 +112,7 @@ export default {
 }
 
 .nav-aside {
-  margin-top:150px;
+  margin-top: 150px;
   left: 0;
   height: 100%;
   background-color: #ececec;
