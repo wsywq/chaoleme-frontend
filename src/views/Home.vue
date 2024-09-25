@@ -3,6 +3,7 @@ import Weather from "@/components/home/Weather.vue";
 import {ref} from "vue";
 import SubmitDish from "@/components/home/SubmitDish.vue";
 import Order from "@/components/home/Order.vue";
+import Chat from "@/components/home/Chat.vue";
 
 const activeName = ref('1');
 </script>
@@ -40,16 +41,13 @@ const activeName = ref('1');
             <Order/>
           </template>
         </el-collapse-item>
-        <el-collapse-item title="Controllability" name="4">
-          <div>
-            Decision making: giving advices about operations is acceptable, but do
-            not make decisions for the users;
-          </div>
-          <div>
-            Controlled consequences: users should be granted the freedom to
-            operate, including canceling, aborting or terminating current
-            operation.
-          </div>
+        <el-collapse-item name="4">
+          <template #title>
+            <img src="/public/chat.svg" alt="order" class="collapse-icon"/>ChatGPT
+          </template>
+          <template #default>
+            <Chat/>
+          </template>
         </el-collapse-item>
       </el-collapse>
     </el-main>
@@ -64,7 +62,7 @@ const activeName = ref('1');
 }
 
 .background-image {
-  background-image: url('/public/ahead.png');
+  background-image: url('/public/ahead.jpg');
   background-size: cover; /* 根据需要设置 */
   background-position: center; /* 根据需要设置 */
 }
