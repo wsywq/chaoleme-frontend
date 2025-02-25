@@ -58,9 +58,9 @@
 
 import { ref, reactive, nextTick, watch } from 'vue';
 import { ElMessage } from 'element-plus';
-import { getCategoryList } from "@/http/category.js";
-import { uploadFile } from "@/http/common.js";
-import { addDish } from "@/http/dish.js";
+import {getCategoryList} from "@/http/category.js";
+import {uploadImageFile} from "@/http/common.js";
+import {addDish} from "@/http/dish.js";
 import { compress } from "@/utils/compress.js";
 
 const heatLevelList = ref([1, 2, 3, 4, 5]);
@@ -109,7 +109,7 @@ const submitForm = () => {
   const formData = new FormData();
   formData.append("image", uploadImage.value);
   submitLoading.value = true;
-  uploadFile(formData).then(res => {
+  uploadImageFile(formData).then(res => {
     dialogForm.value.imageUrl = res.data;
     addDish(dialogForm.value).then(result => {
       if (result.code === 200) {

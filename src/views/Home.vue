@@ -4,6 +4,7 @@ import {ref} from "vue";
 import SubmitDish from "@/components/home/SubmitDish.vue";
 import Order from "@/components/home/Order.vue";
 import Chat from "@/components/home/Chat.vue";
+import UploadExcel from "@/components/home/UploadExcel.vue";
 
 const activeName = ref('1');
 </script>
@@ -43,10 +44,18 @@ const activeName = ref('1');
         </el-collapse-item>
         <el-collapse-item name="4">
           <template #title>
-            <img src="/public/chat.svg" alt="order" class="collapse-icon"/>ChatGPT
+            <img src="/public/chati.svg" alt="order" class="collapse-icon"/>ChatGPT
           </template>
           <template #default>
             <Chat/>
+          </template>
+        </el-collapse-item>
+        <el-collapse-item name="5">
+          <template #title>
+            <img src="/public/chati.svg" alt="order" class="collapse-icon"/>上传Excel文件
+          </template>
+          <template #default>
+            <UploadExcel/>
           </template>
         </el-collapse-item>
       </el-collapse>
